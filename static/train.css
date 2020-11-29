@@ -1,0 +1,22 @@
+* {
+    background-color: #c7dbfc;
+    font-family: Avenir Next;
+}
+
+.choose-col {
+    background-color: #f5edfc;
+    font-size: 10pt;
+}
+
+.submit-button {
+    width: 150px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 100px;
+    background-color: #f5edfc;
+    border: 1pt solid #0d48de;
+    border-radius: 3pt;
+    color: #0d48de;
+    font-size: 10pt;
+    outline: none;
+}

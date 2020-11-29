@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ static_url('train.css') }}" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Model</title>
+</head>
+
+<body style="text-align: center">
+    <div style="padding-top: 2%"></div>
+
+    <!-- display dataset -->
+    <div style="max-width: 800px; margin: auto;">{% raw data %}</div>
+    <div style="padding-top: 3%"></div>
+
+    <!-- if the model hasn't been trained, give the option to -->
+    {% if not trained %}
+    <form model="get" action="/train/{{filename}}">
+        <p>Please input the index of the column you wish to predict:</p>
+        <input class="choose-col" type="number" name="col"><br>
+        <button onclick="hideButton()" class="submit-button" id="submit-btn" type="submit">Train Model</button>
+    </form>
+    <p id="wait-msg" style="display: none; margin-top: 1%"> Please wait while your logistic regression model is trained </p>
+    {% end %}
+
+    <!-- if the model has been trained, display its accuracy and option to generate ROC curve -->
+    {% if trained %}
+    <p> Your logistic regression model has been trained </p>
+    <p> Accuracy = {{acc}} </p>
+    <form model="get" action="/visualize/{{filename}}/{{col}}">
+        <button onclick="hideButton()" class="submit-button" id="submit-btn" type="submit">Get ROC Curve</button>
+    </form>
+    <p id="wait-msg" style="display: none; margin-top: 1%"> Please wait while your ROC Curve is generated </p>
+    <div style="padding-top: 5%"></div>
+    {% end %}
+    
+<script>
+    // when ROC curve button is clicked, replace it with a waiting message
+    function hideButton() {
+        var x = document.getElementById("submit-btn");
+        var y = document.getElementById("wait-msg");
+        x.style.display = "none";
+        y.style.display = "block";
+        console.log("test");
+    }
+</script>
+</body>
+</html>

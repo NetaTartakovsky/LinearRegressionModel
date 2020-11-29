@@ -1,0 +1,15 @@
+* {
+    background-color: #c7dbfc;
+    font-family: Avenir Next;
+}
+
+.submit-button {
+    width: 75px;
+    height: 20px;
+    background-color: #f5edfc;
+    border: 1pt solid #0d48de;
+    border-radius: 3pt;
+    color: #0d48de;
+    font-size: 9pt;
+    outline: none;
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ static_url('visualize.css') }}" type="text/css">
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <title>ROC Curve</title>
+</head>
+
+<body style="text-align: center">
+    <div style="width: 100%; text-align: center; padding-top: 50px;">
+        <div class="curve" id="curve"></div>
+    </div>
+
+    <form model="get" action="/">
+        <button class="submit-data" type="submit">Submit a different dataset</button>
+    </form>
+</body>
+
+<script>
+    // store tpr, fpr, and matrices data
+    var tpr = {% raw tpr %};
+    var fpr = {% raw fpr %};
+    var matrices = {% raw matrices %};
+    matrices = matrices.reverse();
+
+    // create coordinate array to store (fpr, tpr) pairs
+    var coords = [{x: 0, y: 0}];
+    for (var i = tpr.length-1; i >= 0; i--) {
+        coords.push({x: fpr[i], y: tpr[i]});
+    }
+    console.log(coords);
+    var baseline = [{x: 0, y: 0}, {x: 1, y: 1}];
+
+    // set the dimensions and margins of the graph
+    var margin = {top: 30, right: 200, bottom: 150, left: 60},
+        width = 800 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#curve")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // add x axis
+    var x = d3.scaleLinear()
+        .domain([ 0, 1 ])
+        .range([ 0, width ]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // text label for the x axis
+    svg.append("text")  
+        .attr("class", "label")           
+        .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 40) + ")")
+        .text("False Positive Rate");
+    
+    // add y axis
+    var y = d3.scaleLinear()
+        .domain([ 0, 1 ])
+        .range([ height, 0 ]);
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .text("True Positive Rate");
+
+    // title
+    svg.append("text")   
+        .attr("class", "label")          
+        .attr("transform", "translate(" + (width/2) + " ," + -10 + ")")
+        .text("ROC Curve");
+
+    // line function
+    var lineFunc = d3.line()
+                    .x(function(d) { return x(d.x); })
+                    .y(function(d) { return y(d.y); });
+
+    // add the roc curve
+    svg.append("path")
+        .attr("d", lineFunc(coords))
+        .attr("stroke", "blue")
+        .attr("fill", "none");
+
+    // add the baseline
+    svg.append("path")
+        .attr("d", lineFunc(baseline))
+        .attr("stroke", "orange")
+        .attr("fill", "none");
+
+    // add the legend
+    svg.append("rect")
+        .attr("class", "legend")
+        .attr("width", 100)
+        .attr("height", 70)
+        .attr("x", width-100)
+        .attr("y", height-100);
+
+    svg.append("circle")
+        .style("z-index", 1)
+        .style("fill", "blue")
+        .style("stroke", "blue")
+        .attr("r", 6)
+        .attr("cx", width-85)
+        .attr("cy", height-80);
+
+    svg.append("circle")
+        .style("z-index", 1)
+        .style("fill", "orange")
+        .style("stroke", "orange")
+        .attr("r", 6)
+        .attr("cx", width-85)
+        .attr("cy", height-55);
+
+    svg.append("text")
+        .attr("x", width-75)
+        .attr("y", height-75)
+        .style("font-size", "10pt")
+        .text("ROC Curve")
+
+    svg.append("text")
+        .attr("x", width-75)
+        .attr("y", height-50)
+        .style("font-size", "10pt")
+        .text("Baseline")
+    
+    // tooltip
+    var focus = svg.append("g")
+        .style("display", "none");
+
+    // tooltip circle
+    focus.append("circle")
+        .attr("class", "tooltip-circle")
+        .attr("r", 4);
+
+    // tooltip box
+    focus.append("rect")
+        .attr("class", "tooltip")
+        .attr("width", 125)
+        .attr("height", 125)
+        .attr("x", 10)
+        .attr("y", 10)
+        .attr("rx", 4)
+        .attr("rx", 4);
+
+    // tooltip threshold text
+    focus.append("text")
+        .attr("class", "tooltip-thresh")
+        .attr("x", 20)
+        .attr("y", 30);
+
+    // tooltip confusion matrix
+    focus.append("text")
+        .attr("class", "tooltip-tp")
+        .attr("x", 20)
+        .attr("y", 60);
+
+    focus.append("text")
+        .attr("class", "tooltip-fp")
+        .attr("x", 75)
+        .attr("y", 60);
+
+    focus.append("text")
+        .attr("class", "tooltip-fn")
+        .attr("x", 20)
+        .attr("y", 80);
+
+    focus.append("text")
+        .attr("class", "tooltip-tn")
+        .attr("x", 75)
+        .attr("y", 80);
+
+    // detect hover over curve
+    svg.append("rect")                                     
+        .attr("width", width)                              
+        .attr("height", height)                            
+        .style("fill", "none")                             
+        .style("pointer-events", "all")                    
+        .on("mouseover", function() { focus.style("display", null); })
+        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+    bisectCurve = d3.bisector(function(d) { return d.x; }).left;
+    
+    // define what to do on a mouseover
+    function mousemove() {
+        var x0 = x.invert(d3.mouse(this)[0]),
+            i = bisectCurve(coords, x0, 1);
+            d0 = coords[i - 1],
+            d1 = coords[i],
+            d = x0 - d0.x > d1.x - x0 ? d1 : d0;
+
+        if (d.x != 0) {
+            index = d == d1 ? i : i-1;
+            thresh = (1 - (index / 1000)).toFixed(3);
+            focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
+            focus.select(".tooltip-thresh").text("Threshold: " + thresh);
+            focus.select(".tooltip-tp").text("TP: " + matrices[index-1]['tp']);
+            focus.select(".tooltip-fp").text("FP: " + matrices[index-1]['fp']);
+            focus.select(".tooltip-tn").text("TN: " + matrices[index-1]['tn']);
+            focus.select(".tooltip-fn").text("FN: " + matrices[index-1]['fn']);
+        }
+    }
+    
+</script>
+</html>

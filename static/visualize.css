@@ -1,0 +1,44 @@
+* {
+    background-color: #c7dbfc;
+    font-family: Avenir Next;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.curve {
+    width: auto;
+    margin-left: 140px;
+}
+
+.label {
+    text-anchor: middle;
+}
+
+.tooltip-circle {
+    fill: none;
+    stroke: blue;
+}
+
+.tooltip, .legend {
+    fill: white;
+    stroke: black;
+}
+
+.tooltip-thresh, .tooltip-tn, .tooltip-tp, .tooltip-fn, .tooltip-fp {
+    font-size: 10pt;
+}
+
+.submit-data {
+    width: 200px;
+    height: 60px;
+    margin-top: 0;
+    margin-bottom: 100px;
+    background-color: #f5edfc;
+    border: 1pt solid #0d48de;
+    border-radius: 3pt;
+    color: #0d48de;
+    font-size: 10pt;
+    outline: none;
+}
