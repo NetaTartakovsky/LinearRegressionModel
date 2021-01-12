@@ -1,4 +1,3 @@
-import asyncio
 import numpy as np
 import pandas as pd
 
@@ -27,18 +26,18 @@ class LogisticRegression:
         h = self.sigmoid(np.dot(x, theta))
         return np.dot(x.T, (h-y)) / len(y)
 
-    async def fit(self, x, y):
+    def fit(self, x, y):
         theta = np.zeros(x.shape[1])
         for i in range(self.iterations):
             theta -= self.lr * self.gradient(x, y, theta)
         return theta
 
-    async def predict(self, x, theta, thresh):
+    def predict(self, x, theta, thresh):
         return (self.sigmoid(np.dot(x, theta)) >= thresh)*1
 
     async def trainAndPredict(self, x, y, thresh):
-        theta = await self.fit(x, y)
-        preds = await self.predict(x, theta, thresh)
+        theta = self.fit(x, y)
+        preds = self.predict(x, theta, thresh)
         accuracy = sum(preds == y) / len(y)
         return accuracy
 
