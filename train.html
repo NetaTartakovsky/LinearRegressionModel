@@ -6,23 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Train Model</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        
+        .data {
+            max-width: 800px; 
+            margin: auto;
+        }
+        
+        .space {
+            padding-top: 2%;
+        }
+        
+        #wait-msg-1, #wait-msg-2 {
+            display: none; 
+            margin-top: 1%;
+        }
+    </style>
 </head>
 
-<body style="text-align: center">
-    <div style="padding-top: 2%"></div>
+<body>
+    <div class="space"></div>
 
     <!-- display dataset -->
-    <div style="max-width: 800px; margin: auto;">{% raw data %}</div>
-    <div style="padding-top: 3%"></div>
+    <div class="data">{% raw data %}</div>
+    <div class="space"></div>
 
     <!-- if the model hasn't been trained, give the option to -->
     {% if not trained %}
     <form model="get" action="/train/{{filename}}">
         <p>Please input the index of the column you wish to predict:</p>
         <input class="choose-col" type="number" name="col"><br>
-        <button onclick="hideButton()" class="submit-button" id="submit-btn" type="submit">Train Model</button>
+        <button onclick="hideButtonTrain()" class="submit-button" id="submit-btn-1" type="submit">Train Model</button>
     </form>
-    <p id="wait-msg" style="display: none; margin-top: 1%"> Please wait while your logistic regression model is trained </p>
+    <p id="wait-msg-1"> Please wait while your logistic regression model is trained </p>
     {% end %}
 
     <!-- if the model has been trained, display its accuracy and option to generate ROC curve -->
@@ -30,17 +49,25 @@
     <p> Your logistic regression model has been trained </p>
     <p> Accuracy = {{acc}} </p>
     <form model="get" action="/visualize/{{filename}}/{{col}}">
-        <button onclick="hideButton()" class="submit-button" id="submit-btn" type="submit">Get ROC Curve</button>
+        <button onclick="hideButtonCurve()" class="submit-button" id="submit-btn-2" type="submit">Get ROC Curve</button>
     </form>
-    <p id="wait-msg" style="display: none; margin-top: 1%"> Please wait while your ROC Curve is generated </p>
-    <div style="padding-top: 5%"></div>
+    <p id="wait-msg-2"> Please wait while your ROC Curve is generated </p>
+    <div class="space"></div>
     {% end %}
     
 <script>
     // when ROC curve button is clicked, replace it with a waiting message
-    function hideButton() {
-        var x = document.getElementById("submit-btn");
-        var y = document.getElementById("wait-msg");
+    function hideButtonTrain() {
+        var x = document.getElementById("submit-btn-1");
+        var y = document.getElementById("wait-msg-1");
+        x.style.display = "none";
+        y.style.display = "block";
+        console.log("test");
+    }
+    
+    function hideButtonCurve() {
+        var x = document.getElementById("submit-btn-2");
+        var y = document.getElementById("wait-msg-2");
         x.style.display = "none";
         y.style.display = "block";
         console.log("test");
