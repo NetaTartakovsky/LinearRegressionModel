@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ static_url('visualize.css') }}" type="text/css">
-    <script src="https://d3js.org/d3.v4.js"></script>
     <title>ROC Curve</title>
 </head>
 
-<body style="text-align: center">
-    <div style="width: 100%; text-align: center; padding-top: 50px;">
+<body>
+    <div class="curve-container">
         <div class="curve" id="curve"></div>
     </div>
 
@@ -19,6 +18,8 @@
     </form>
 </body>
 
+<script src="https://d3js.org/d3.v4.js"></script>
+    
 <script>
     // store tpr, fpr, and matrices data
     var tpr = {% raw tpr %};
