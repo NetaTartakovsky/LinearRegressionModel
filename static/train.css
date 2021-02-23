@@ -3,6 +3,24 @@
     font-family: Avenir Next;
 }
 
+body {
+    text-align: center;
+}
+        
+.data {
+    max-width: 800px; 
+    margin: auto;
+}
+        
+.space {
+    padding-top: 2%;
+}
+        
+#wait-msg-1, #wait-msg-2 {
+    display: none; 
+    margin-top: 1%;
+}
+
 .choose-col {
     background-color: #f5edfc;
     font-size: 10pt;
