@@ -1,6 +1,11 @@
-* {
+body {
     background-color: #c7dbfc;
     font-family: Avenir Next;
+    text-align: center;
+}
+        
+.space {
+    padding-top: 2%;
 }
 
 .submit-button {
